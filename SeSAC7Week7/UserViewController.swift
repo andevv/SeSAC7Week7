@@ -55,7 +55,15 @@ class UserViewController: UIViewController {
         return stackView
     }()
     
-    var list: [Person] = []
+    //저장 프로퍼티
+    var list: [Person] = [] {
+        didSet {
+//            print("list 데이터가 달라졌어요")
+//            print(oldValue)
+//            print(list)
+            tableView.reloadData()
+        }
+    }
      
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,18 +83,18 @@ class UserViewController: UIViewController {
             Person(name: "Patricia", age: Int.random(in: 20...70)),
             Person(name: "Robert", age: Int.random(in: 20...70))
         ]
-        tableView.reloadData()
+        //tableView.reloadData()
     }
     
     @objc private func resetButtonTapped() {
         list.removeAll()
-        tableView.reloadData()
+        //tableView.reloadData()
     }
     
     @objc private func addButtonTapped() {
         let jack = Person(name: "Jack", age: Int.random(in: 1...100))
         list.append(jack)
-        tableView.reloadData()
+        //tableView.reloadData()
     }
 }
 
