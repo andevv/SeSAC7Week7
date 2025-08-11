@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 class UserViewController: UIViewController {
+    
+    let viewModel = UserViewModel()
 
     private let tableView: UITableView = {
         let table = UITableView()
@@ -55,18 +57,15 @@ class UserViewController: UIViewController {
         return stackView
     }()
     
-    //저장 프로퍼티
-    var list: [Person] = [] {
-        didSet {
-//            print("list 데이터가 달라졌어요")
-//            print(oldValue)
-//            print(list)
-            tableView.reloadData()
-        }
-    }
+
      
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewModel.list.playAction { _ in
+            self.tableView.reloadData()
+        }
+        
         setupUI()
         setupConstraints()
         setupTableView()
@@ -76,25 +75,15 @@ class UserViewController: UIViewController {
     
     
     @objc private func loadButtonTapped() {
-        list = [
-            Person(name: "James", age: Int.random(in: 20...70)),
-            Person(name: "Mary", age: Int.random(in: 20...70)),
-            Person(name: "John", age: Int.random(in: 20...70)),
-            Person(name: "Patricia", age: Int.random(in: 20...70)),
-            Person(name: "Robert", age: Int.random(in: 20...70))
-        ]
-        //tableView.reloadData()
+        viewModel.loadButtonTapped.value = ()
     }
     
     @objc private func resetButtonTapped() {
-        list.removeAll()
-        //tableView.reloadData()
+        viewModel.resetButtonTapped.value = ()
     }
     
     @objc private func addButtonTapped() {
-        let jack = Person(name: "Jack", age: Int.random(in: 1...100))
-        list.append(jack)
-        //tableView.reloadData()
+        viewModel.addButtonTapped.value = ()
     }
 }
 
@@ -136,13 +125,13 @@ extension UserViewController {
  
 extension UserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        return viewModel.list.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell", for: indexPath)
-        let person = list[indexPath.row]
-        cell.textLabel?.text = "\(person.name), \(person.age)세"
+        let data = viewModel.cellForRowAtData(indexPath: indexPath.row)
+        cell.textLabel?.text = data
         return cell
     }
 }
