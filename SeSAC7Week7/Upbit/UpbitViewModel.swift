@@ -9,21 +9,32 @@ import Foundation
 
 final class UpbitViewModel {
     
-    var inputCellSelectedTrigger: Observable<Upbit?> = Observable(nil)
-    var inputViewDidLoadTrigger: Observable<Void> = Observable(())
-        
-    var outputMarketData: Observable<[Upbit]> = Observable([])
-    var outputNavigationTitleData = Observable("")
-    var outputCellSelected: Observable<String> = Observable("")
+    struct Input {
+        var cellSelectedTrigger: Observable<Upbit?> = Observable(nil)
+        var viewDidLoadTrigger: Observable<Void> = Observable(())
+    }
+    
+    struct Output {
+        var marketData: Observable<[Upbit]> = Observable([])
+        var navigationTitleData = Observable("")
+        var cellSelected: Observable<String> = Observable("")
+    }
+    
+    var input: Input
+    var output: Output
     
     init() {
-        inputCellSelectedTrigger.bind {
+        
+        input = Input()
+        output = Output()
+        
+        input.cellSelectedTrigger.bind {
             print("ViewModel inputCellSelectedTrigger")
-            print(self.inputCellSelectedTrigger.value)
-            self.outputCellSelected.value = self.inputCellSelectedTrigger.value?.korean_name ?? ""
+            print(self.input.cellSelectedTrigger.value)
+            self.output.cellSelected.value = self.input.cellSelectedTrigger.value?.korean_name ?? ""
         }
         
-        inputViewDidLoadTrigger.lazyBind {
+        input.viewDidLoadTrigger.lazyBind {
             print("ViewModel inputViewDidLoadTrigger")
             
             self.callRequest()
@@ -32,8 +43,8 @@ final class UpbitViewModel {
     
     func callRequest() {
         UpbitManager.shared.callRequest { market, title in
-            self.outputMarketData.value = market
-            self.outputNavigationTitleData.value = title
+            self.output.marketData.value = market
+            self.output.navigationTitleData.value = title
         }
     }
 }

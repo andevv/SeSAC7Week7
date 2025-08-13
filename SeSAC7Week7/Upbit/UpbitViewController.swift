@@ -29,30 +29,30 @@ class UpbitViewController: UIViewController {
     }
     
     func bindData() {
-        viewModel.inputViewDidLoadTrigger.value = ()
+        viewModel.input.viewDidLoadTrigger.value = ()
         
-        viewModel.outputMarketData.bind {
+        viewModel.output.marketData.bind {
             print("outputMarketData")
             self.tableView.reloadData()
         }
         
-        viewModel.outputNavigationTitleData.bind {
+        viewModel.output.navigationTitleData.bind {
             print("outputNavTitleData")
-            let value = self.viewModel.outputNavigationTitleData.value
+            let value = self.viewModel.output.navigationTitleData.value
             self.navigationItem.title = value
         }
         
         //lazyBind 사용 또는 Optional(nil)일 때 실행되지 않도록 early exit
-        viewModel.outputCellSelected.bind {
+        viewModel.output.cellSelected.bind {
             print("outputCellSelected")
-            print("output", self.viewModel.outputCellSelected.value)
+            print("output", self.viewModel.output.cellSelected.value)
             
-            if self.viewModel.outputCellSelected.value.isEmpty {
+            if self.viewModel.output.cellSelected.value.isEmpty {
                 return
             }
             
             let vc = UpbitDetailViewController()
-            vc.viewModel.outputTitle.value = self.viewModel.outputCellSelected.value
+            vc.viewModel.outputTitle.value = self.viewModel.output.cellSelected.value
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -73,12 +73,12 @@ class UpbitViewController: UIViewController {
 
 extension UpbitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.outputMarketData.value.count
+        return viewModel.output.marketData.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath)
-        let row = viewModel.outputMarketData.value[indexPath.row]
+        let row = viewModel.output.marketData.value[indexPath.row]
         cell.textLabel?.text = row.overview
         return cell
     }
@@ -86,9 +86,9 @@ extension UpbitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(#function)
         
-        let row = viewModel.outputMarketData.value[indexPath.row]
+        let row = viewModel.output.marketData.value[indexPath.row]
         
-        viewModel.inputCellSelectedTrigger.value = row
+        viewModel.input.cellSelectedTrigger.value = row
     }
     
 }
