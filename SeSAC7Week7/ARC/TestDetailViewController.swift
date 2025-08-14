@@ -11,7 +11,8 @@ class TestDetailViewController: UIViewController {
     
     var nickname = "고래밥"
     
-    lazy var test = {
+    lazy var test = { [weak self] in
+        guard let self = self else { return }
         print("안녕하세요 저는 \(self.nickname)입니다.") //self 때문에 deinit이 되지 않는 상황
     }
 

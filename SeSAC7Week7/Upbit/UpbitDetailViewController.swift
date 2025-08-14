@@ -14,6 +14,7 @@ class UpbitDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(self, "viewDidLoad")
         
         view.backgroundColor = .white
         
@@ -21,12 +22,27 @@ class UpbitDetailViewController: UIViewController {
         //bind로 전달한 함수를
         // -> 바로 실행도 하고, didSet action에 넣어둘지
         // -> 실행하지 않고 didSet action에 넣어둘지
-        viewModel.outputTitle.bind {
+        viewModel.outputTitle.bind { [weak self] in
+            guard let self = self else { return }
             let data = self.viewModel.outputTitle.value
             self.navigationItem.title = data
             print("outputTitle Bind, \(data)")
         }
 
+    }
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        print(self, "init")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("UpbitDetailViewController: Deinit")
     }
 
 }

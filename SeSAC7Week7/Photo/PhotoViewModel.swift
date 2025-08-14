@@ -60,7 +60,8 @@ final class PhotoViewModel {
             print("0~100 사이의 숫자를 입력해주세요.")
             return
         }
-        PhotoManager.shared.getOnePhoto(api: .one(id: photoId)) { photo in
+        PhotoManager.shared.getOnePhoto(api: .one(id: photoId)) { [weak self] photo in
+            guard let self = self else { return }
             let data = "작가: \(photo.author), 해상도: \(photo.width) x \(photo.height)"
             self.output.overview.value = data
             
